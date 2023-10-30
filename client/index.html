@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Chat</title>
+
+  <script type="module">
+    import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+
+    const socket = io()
+    const frm = document.querySelector("#frm")
+    const txt = document.querySelector("#txt")
+    const messages = document.querySelector("#messages")
+
+    socket.on("msge", (msg) => {
+      const newMsge = `<div>${msg}<div>`
+      messages.insertAdjacentHTML("beforeend", newMsge) 
+    })
+
+    frm.addEventListener("submit", (e) => {
+      e.preventDefault()
+
+      if (txt.value) {
+        socket.emit("msge", txt.value)
+        txt.value = ""
+      }
+      console.log(txt.value)
+    })
+  </script>
+</head>
+<body>
+  
+  <div class="navbar bg-base-100 shadow-lg">
+    <a class="btn btn-ghost normal-case text-xl">Chat</a>
+  </div>
+
+  <section id="messages" class="m-4">
+    <div class="chat chat-start">
+      <div class="chat-bubble chat-bubble-info">It's over Anakin, <br/>I have the high ground.</div>
+    </div>
+    <div class="chat chat-end">
+      <div class="chat-bubble chat-bubble-success">You underestimate my power!</div>
+    </div>
+  </section>
+
+  <form id="frm" class="grid place-items-center w-full absolute bottom-4">
+    <div class="join p-4">
+      <input id="txt" class="input input-bordered join-item rounded-l-full" type="text" placeholder="Mensaje"/>
+      <button class="btn btn-primary join-item rounded-r-full">Enviar</button>
+    </div> 
+  </form>
+
+</body>
+</html>
